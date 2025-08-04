@@ -14,21 +14,31 @@ A **production-grade, generic test automation framework** for web UI, API, and d
    ```sh
    npm run bdd
    ```
-3. **Run only tagged tests (e.g., @smoke or @regression):**
-   ```sh
-   npm run bdd -- --tags "@smoke"
-   npm run bdd -- --tags "@regression"
-   ```
-4. **View Allure report:**
-   ```sh
-   npx allure generate allure-results --clean -o allure-report
-   npx allure open allure-report
-   ```
-5. **Generate Cucumber HTML report:**
-   ```sh
-   npm run report:cucumber
-   # Open cucumber-report.html in your browser
-   ```
+
+---
+
+## ⚡ Execution
+
+You can run all or specific tagged BDD tests using the following commands:
+
+| **Purpose**                | **Command**                                      |
+|----------------------------|--------------------------------------------------|
+| Run all BDD tests          | `npm run bdd`                                     |
+| Run only @smoke tests      | `npm run bdd -- --tags "@smoke"`                 |
+| Run only @regression tests | `npm run bdd -- --tags "@regression"`            |
+| Run only @api tests        | `npm run bdd -- --tags "@api"`                   |
+| Exclude @wip tests         | `npm run bdd -- --tags "not @wip"`               |
+
+---
+
+## 📊 Viewing Reports
+
+After running your tests, you can generate and view reports as follows:
+
+| **Report Type**         | **How to Generate**                                                                                 | **How to View**                        |
+|------------------------|-----------------------------------------------------------------------------------------------------|-----------------------------------------|
+| Cucumber HTML Report   | `npm run report:cucumber`                                                                            | Open `cucumber-report.html` in browser  |
+| Allure Report          | `npx allure generate allure-results --clean -o allure-report`<br>`npx allure open allure-report`     | Opens Allure report in browser          |
 
 ---
 
@@ -68,23 +78,44 @@ Feature: DemoQA UI Testing
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 
+// Helper to fill the text box form
+async function fillTextBoxForm(page, name, email) {
+  await page.fill('#userName', name);
+  await page.fill('#userEmail', email);
+}
+
 Given('I am on the Text Box page', async function () {
-  await this.page.goto('https://demoqa.com/text-box');
+  try {
+    await this.page.goto('https://demoqa.com/text-box');
+  } catch (err) {
+    throw new Error(`Failed to navigate to Text Box page: ${err.message}`);
+  }
 });
 
 When('I fill in the form with name {string} and email {string}', async function (name, email) {
-  await this.page.fill('#userName', name);
-  await this.page.fill('#userEmail', email);
+  try {
+    await fillTextBoxForm(this.page, name, email);
+  } catch (err) {
+    throw new Error(`Failed to fill form: ${err.message}`);
+  }
 });
 
 When('I submit the form', async function () {
-  await this.page.click('#submit');
+  try {
+    await this.page.click('#submit');
+  } catch (err) {
+    throw new Error(`Failed to submit form: ${err.message}`);
+  }
 });
 
 Then('the output should show name {string} and email {string}', async function (name, email) {
-  await expect(this.page.locator('#output')).toBeVisible();
-  await expect(this.page.locator('#name')).toContainText(name);
-  await expect(this.page.locator('#email')).toContainText(email);
+  try {
+    await expect(this.page.locator('#output')).toBeVisible();
+    await expect(this.page.locator('#name')).toContainText(name);
+    await expect(this.page.locator('#email')).toContainText(email);
+  } catch (err) {
+    throw new Error(`Output validation failed: ${err.message}`);
+  }
 });
 ```
 
@@ -94,24 +125,6 @@ Then('the output should show name {string} and email {string}', async function (
 - Add new `.feature` files for your UI, API, or DB scenarios.
 - Implement corresponding step definitions in `features/step-definitions/`.
 - Use tags like `@smoke`, `@regression`, `@api`, etc. for filtering.
-
----
-
-## 📊 Reporting
-- **Allure reporting** is integrated for Playwright and can be extended for Cucumber.
-- **Cucumber HTML reporting** is available for BDD scenarios.
-
-### Allure Report
-```sh
-npx allure generate allure-results --clean -o allure-report
-npx allure open allure-report
-```
-
-### Cucumber HTML Report
-```sh
-npm run report:cucumber
-# Open cucumber-report.html in your browser
-```
 
 ---
 
