@@ -1,5 +1,6 @@
 Feature: Reqres API Testing
 
+  @smoke
   Scenario: List users on page 2
     Given I have the reqres API base URL
     When I request the list of users on page 2

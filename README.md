@@ -4,22 +4,54 @@ A **production-grade, generic test automation framework** for web UI, API, and d
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Capabilities
 
-1. **Install dependencies:**
+| **Feature**                | **Description**                                                                                 |
+|----------------------------|-----------------------------------------------------------------------------------------------|
+| BDD Gherkin Support        | Write tests in plain English using `.feature` files and step definitions                        |
+| UI Test Automation         | Automate web UI flows using Playwright and Page Object Model                                    |
+| API Test Automation        | Test REST and SOAP APIs, including contract testing with Dredd                                  |
+| DB Test Automation         | Validate database state and queries in BDD scenarios                                            |
+| Tagging & Filtering        | Run tests by tag (e.g., `@smoke`, `@regression`, `@api`)                                       |
+| Parallel Execution         | Run tests in parallel for speed                                                                 |
+| Allure Reporting           | Generate beautiful, interactive test reports                                                   |
+| Cucumber HTML Reporting    | Generate human-readable HTML reports for BDD scenarios                                         |
+| Artifact Capture           | Capture screenshots and HTML on failure for easy debugging                                      |
+| Debug Mode                 | Run tests in headed mode with slow motion for step-by-step debugging                            |
+| Pre-commit Hooks           | Lint and format code automatically before every commit                                          |
+| .env Support               | Manage environment variables securely and flexibly                                              |
+| Reusable Templates         | Scaffold new feature files and step definitions quickly                                         |
+| Stateful Debugging         | Use Playwright Inspector and VSCode for interactive debugging                                   |
+| API Contract Testing       | Validate your API against OpenAPI/Swagger specs with Dredd                                      |
+| Test Tag Analytics         | Analyze test results by tag using Cucumber HTML report                                          |
+| Extensible & Maintainable  | Add new page objects, step definitions, and utilities as needed                                 |
+
+---
+
+## 🛠️ Setup
+
+1. **Clone the repository**
+   ```sh
+   git clone <your-repo-url>
+   cd playwright-healthcare-framework
+   ```
+2. **Install dependencies**
    ```sh
    npm install
    ```
-2. **Run all BDD tests (UI, API, DB):**
+3. **(Optional) Copy and edit environment variables**
    ```sh
-   npm run bdd
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+4. **Install Playwright browsers**
+   ```sh
+   npx playwright install
    ```
 
 ---
 
-## ⚡ Execution
-
-You can run all or specific tagged BDD tests using the following commands:
+## ⚡ Common Commands
 
 | **Purpose**                | **Command**                                      |
 |----------------------------|--------------------------------------------------|
@@ -28,31 +60,21 @@ You can run all or specific tagged BDD tests using the following commands:
 | Run only @regression tests | `npm run bdd -- --tags "@regression"`            |
 | Run only @api tests        | `npm run bdd -- --tags "@api"`                   |
 | Exclude @wip tests         | `npm run bdd -- --tags "not @wip"`               |
-
----
-
-## 📊 Viewing Reports
-
-After running your tests, you can generate and view reports as follows:
-
-| **Report Type**         | **How to Generate**                                                                                 | **How to View**                        |
-|------------------------|-----------------------------------------------------------------------------------------------------|-----------------------------------------|
-| Cucumber HTML Report   | `npm run report:cucumber`                                                                            | Open `cucumber-report.html` in browser  |
-| Allure Report          | `npx allure generate allure-results --clean -o allure-report`<br>`npx allure open allure-report`     | Opens Allure report in browser          |
+| Debug mode (headed, slow)  | `DEBUG=true npm run bdd`                          |
+| Cucumber HTML report       | `npm run report:cucumber`                         |
+| Allure report              | `npx allure generate allure-results --clean -o allure-report`<br>`npx allure open allure-report` |
+| API contract test (Dredd)  | `npx dredd api-description.yaml http://localhost:3000/api` |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-features/
-  ui/                  # UI Gherkin feature files
-  api/                 # API Gherkin feature files
-  db/                  # DB Gherkin feature files
-  step-definitions/    # Step definitions for all features
-  support/             # Custom Cucumber World and hooks
+features/              # BDD feature files and step definitions
 src/                   # Source code (page objects, utils, config, etc.)
 tests/                 # (Optional) Playwright .spec.ts tests
+logs/, screenshots/    # Artifacts captured on failure
+allure-results/, html-report/ # Test reports
 ```
 
 ---
@@ -60,71 +82,15 @@ tests/                 # (Optional) Playwright .spec.ts tests
 ## 🧑‍💻 Writing BDD Scenarios
 - Write your scenarios in `.feature` files using Gherkin syntax (Given/When/Then).
 - Implement the logic for each step in `.ts` files under `features/step-definitions/`.
-
-### Example UI Feature (`features/ui/demoqa.feature`)
-```gherkin
-@smoke
-Feature: DemoQA UI Testing
-
-  Scenario: Fill out the Text Box form
-    Given I am on the Text Box page
-    When I fill in the form with name "John Doe" and email "john.doe@example.com"
-    And I submit the form
-    Then the output should show name "John Doe" and email "john.doe@example.com"
-```
-
-### Example UI Step Definitions (`features/step-definitions/ui.steps.ts`)
-```ts
-import { Given, When, Then } from '@cucumber/cucumber';
-import { expect } from '@playwright/test';
-
-// Helper to fill the text box form
-async function fillTextBoxForm(page, name, email) {
-  await page.fill('#userName', name);
-  await page.fill('#userEmail', email);
-}
-
-Given('I am on the Text Box page', async function () {
-  try {
-    await this.page.goto('https://demoqa.com/text-box');
-  } catch (err) {
-    throw new Error(`Failed to navigate to Text Box page: ${err.message}`);
-  }
-});
-
-When('I fill in the form with name {string} and email {string}', async function (name, email) {
-  try {
-    await fillTextBoxForm(this.page, name, email);
-  } catch (err) {
-    throw new Error(`Failed to fill form: ${err.message}`);
-  }
-});
-
-When('I submit the form', async function () {
-  try {
-    await this.page.click('#submit');
-  } catch (err) {
-    throw new Error(`Failed to submit form: ${err.message}`);
-  }
-});
-
-Then('the output should show name {string} and email {string}', async function (name, email) {
-  try {
-    await expect(this.page.locator('#output')).toBeVisible();
-    await expect(this.page.locator('#name')).toContainText(name);
-    await expect(this.page.locator('#email')).toContainText(email);
-  } catch (err) {
-    throw new Error(`Output validation failed: ${err.message}`);
-  }
-});
-```
+- Use tags like `@smoke`, `@regression`, `@api` for filtering and analytics.
 
 ---
 
-## 🏗️ Adding More Scenarios
-- Add new `.feature` files for your UI, API, or DB scenarios.
-- Implement corresponding step definitions in `features/step-definitions/`.
-- Use tags like `@smoke`, `@regression`, `@api`, etc. for filtering.
+## 🐞 Debugging & Troubleshooting
+- **Debug mode:** Run with `DEBUG=true npm run bdd` for headed browser and slow motion.
+- **Playwright Inspector:** Use Playwright’s built-in inspector for step-by-step debugging.
+- **VSCode Debugger:** Set breakpoints in step definitions and use the "Run and Debug" panel.
+- **Artifacts:** Check `logs/` and `screenshots/` for failure evidence.
 
 ---
 
