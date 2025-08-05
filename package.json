@@ -1,7 +1,7 @@
 {
-  "name": "test-automation-framework",
+  "name": "automationframework",
   "version": "1.0.0",
-  "description": "Production-grade Playwright test automation framework for web, API, and database testing.",
+  "description": "Production-grade AutomationFramework for web, API, and database testing.",
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
@@ -38,7 +38,10 @@
     "report:cucumber": "cucumber-js --require-module ts-node/register --require features/step-definitions/**/*.ts --require features/support/world.ts --require features/support/hooks.ts features/**/*.feature --format html:cucumber-report.html"
   },
   "lint-staged": {
-    "*.ts": ["eslint --fix", "prettier --write"]
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "keywords": [
     "playwright",
@@ -57,8 +60,8 @@
     "@playwright/test": "^1.54.2",
     "@types/node": "^20.8.0",
     "@types/xml2js": "^0.4.14",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "allure-commandline": "^2.24.0",
     "allure-cucumberjs": "^3.3.2",
     "allure-playwright": "^2.15.1",

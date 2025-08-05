@@ -1,6 +1,6 @@
-# Test Automation Framework
+# AutomationFramework
 
-A **production-grade, generic test automation framework** for web UI, API, and database testing. Built on top of [Playwright](https://playwright.dev/) and [Cucumber](https://cucumber.io/), this framework enables you to write powerful, maintainable, and readable tests using BDD Gherkin syntax (Given/When/Then) for any project or organization.
+A **production-grade, generic AutomationFramework** for web UI, API, and database testing. Built on top of [Playwright](https://playwright.dev/) and [Cucumber](https://cucumber.io/), this framework enables you to write powerful, maintainable, and readable tests using BDD Gherkin syntax (Given/When/Then) for any project or organization.
 
 ---
 
