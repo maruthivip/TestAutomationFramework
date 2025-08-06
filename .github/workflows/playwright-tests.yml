@@ -35,7 +35,7 @@ on:
           - performance
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
   PLAYWRIGHT_VERSION: '1.40.0'
 
 jobs:
