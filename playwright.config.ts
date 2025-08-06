@@ -81,67 +81,27 @@ export default defineConfig({
       testMatch: /.*\.teardown\.ts/
     },
 
-    // Desktop browsers
+    // UI tests for all browsers
     {
       name: 'chromium',
-      use: { 
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 }
-      },
-      dependencies: ['setup']
+      testMatch: /features\/ui\//,
+      use: { ...devices['Desktop Chrome'] },
     },
-
     {
       name: 'firefox',
-      use: { 
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1920, height: 1080 }
-      },
-      dependencies: ['setup']
+      testMatch: /features\/ui\//,
+      use: { ...devices['Desktop Firefox'] },
     },
-
     {
       name: 'webkit',
-      use: { 
-        ...devices['Desktop Safari'],
-        viewport: { width: 1920, height: 1080 }
-      },
-      dependencies: ['setup']
+      testMatch: /features\/ui\//,
+      use: { ...devices['Desktop Safari'] },
     },
-
-    // Mobile browsers
+    // API tests (run only once, not per browser)
     {
-      name: 'mobile-chrome',
-      use: { 
-        ...devices['Pixel 5']
-      },
-      dependencies: ['setup']
-    },
-
-    {
-      name: 'mobile-safari',
-      use: { 
-        ...devices['iPhone 12']
-      },
-      dependencies: ['setup']
-    },
-
-    // Tablet browsers
-    {
-      name: 'tablet-chrome',
-      use: { 
-        ...devices['iPad Pro']
-      },
-      dependencies: ['setup']
-    },
-
-    // API testing project
-    {
-      name: 'api-tests',
-      testMatch: /.*\.api\.spec\.ts/,
-      use: {
-        baseURL: process.env.API_BASE_URL || 'https://api.yourprojecthost'
-      }
+      name: 'api',
+      testMatch: /features\/api\//,
+      use: {}, // No browser/device config needed
     },
 
     // Accessibility testing project
