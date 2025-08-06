@@ -8,7 +8,7 @@
 
 ---
 
-## 2. Capabilities & How to Use/Experience Each
+## 2. Capabilities 
 
 | **Feature/Capability**         | **How to Experience / Use**                                                                                   |
 |-------------------------------|---------------------------------------------------------------------------------------------------------------|
