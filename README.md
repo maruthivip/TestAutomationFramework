@@ -1,34 +1,40 @@
-# AutomationFramework
-
-A **production-grade, generic AutomationFramework** for web UI, API, and database testing. Built on top of [Playwright](https://playwright.dev/) and [Cucumber](https://cucumber.io/), this framework enables you to write powerful, maintainable, and readable tests using BDD Gherkin syntax (Given/When/Then) for any project or organization.
+# 🚀 AutomationFramework Run Book & Features Guide
 
 ---
 
-## 🚀 Capabilities
+## 1. Overview
 
-| **Feature**                | **Description**                                                                                 |
-|----------------------------|-----------------------------------------------------------------------------------------------|
-| BDD Gherkin Support        | Write tests in plain English using `.feature` files and step definitions                        |
-| UI Test Automation         | Automate web UI flows using Playwright and Page Object Model                                    |
-| API Test Automation        | Test REST and SOAP APIs, including contract testing with Dredd                                  |
-| DB Test Automation         | Validate database state and queries in BDD scenarios                                            |
-| Tagging & Filtering        | Run tests by tag (e.g., `@smoke`, `@regression`, `@api`)                                       |
-| Parallel Execution         | Run tests in parallel for speed                                                                 |
-| Allure Reporting           | Generate beautiful, interactive test reports                                                   |
-| Cucumber HTML Reporting    | Generate human-readable HTML reports for BDD scenarios                                         |
-| Artifact Capture           | Capture screenshots and HTML on failure for easy debugging                                      |
-| Debug Mode                 | Run tests in headed mode with slow motion for step-by-step debugging                            |
-| Pre-commit Hooks           | Lint and format code automatically before every commit                                          |
-| .env Support               | Manage environment variables securely and flexibly                                              |
-| Reusable Templates         | Scaffold new feature files and step definitions quickly                                         |
-| Stateful Debugging         | Use Playwright Inspector and VSCode for interactive debugging                                   |
-| API Contract Testing       | Validate your API against OpenAPI/Swagger specs with Dredd                                      |
-| Test Tag Analytics         | Analyze test results by tag using Cucumber HTML report                                          |
-| Extensible & Maintainable  | Add new page objects, step definitions, and utilities as needed                                 |
+**AutomationFramework** is a production-grade, generic test automation solution for Web UI, API, and Database testing. It leverages Playwright, Cucumber (BDD), and modern best practices for robust, maintainable, and readable test suites.
 
 ---
 
-## 🛠️ Setup
+## 2. Capabilities & How to Use/Experience Each
+
+| **Feature/Capability**         | **How to Experience / Use**                                                                                   |
+|-------------------------------|---------------------------------------------------------------------------------------------------------------|
+| **BDD Gherkin Support**       | Write `.feature` files in `features/` using Given/When/Then. Run with `npm run bdd`.                          |
+| **UI Test Automation**        | Add UI scenarios in `features/ui/` and implement steps in `features/step-definitions/ui.steps.ts`.            |
+| **API Test Automation**       | Add API scenarios in `features/api/` and implement steps in `features/step-definitions/api.steps.ts`.         |
+| **DB Test Automation**        | Add DB scenarios in `features/db/` and implement steps in `features/step-definitions/db.steps.ts`.            |
+| **Tagging & Filtering**       | Tag scenarios in `.feature` files (e.g., `@smoke`). Run with `npm run bdd -- --tags "@smoke"`.              |
+| **Parallel Execution**        | Playwright runs tests in parallel by default. Configure in `playwright.config.ts`.                            |
+| **Allure Reporting**          | After tests, run `npx allure generate allure-results --clean -o allure-report` and `npx allure open allure-report`. |
+| **Cucumber HTML Reporting**   | Run `npm run report:cucumber` to generate `cucumber-report.html`.                                             |
+| **Artifact Capture**          | On test failure, screenshots and HTML are saved in `screenshots/` and `logs/`.                                |
+| **Debug Mode**                | Run `DEBUG=true npm run bdd` for headed browser and slow motion.                                              |
+| **Pre-commit Hooks**          | Husky runs lint/format checks before commit. Try `git commit` with code changes.                              |
+| **.env Support**              | Copy `.env.example` to `.env` and edit for your environment.                                                  |
+| **Reusable Templates**        | Copy existing feature/step files as templates for new tests.                                                  |
+| **Stateful Debugging**        | Use Playwright Inspector (`PWDEBUG=1 npm run bdd`) or VSCode breakpoints.                                     |
+| **API Contract Testing**      | Use Dredd: `npx dredd api-description.yaml http://localhost:3000/api`.                                        |
+| **Test Tag Analytics**        | Open `cucumber-report.html` and filter by tags.                                                               |
+| **Extensible & Maintainable** | Add new page objects in `src/pages/`, utilities in `src/utils/`, and new step definitions as needed.           |
+
+---
+
+## 3. Setup (Local & CI/CD)
+
+### **Local Setup**
 
 1. **Clone the repository**
    ```sh
@@ -39,27 +45,53 @@ A **production-grade, generic AutomationFramework** for web UI, API, and databas
    ```sh
    npm install
    ```
-3. **(Optional) Copy and edit environment variables**
-   ```sh
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
-4. **Install Playwright browsers**
+3. **Install Playwright browsers**
    ```sh
    npx playwright install
    ```
+4. **(Optional) Configure environment**
+   ```sh
+   cp .env.example .env
+   # Edit .env as needed
+   ```
+5. **Verify installation**
+   ```sh
+   npm run type-check
+   npm run lint
+   ```
+6. **Run a sample test**
+   ```sh
+   npm run bdd
+   ```
+
+### **CI/CD (GitHub Actions)**
+
+- The workflow is in `.github/workflows/playwright-tests.yml`.
+- Node.js 20 is used for compatibility with all dependencies.
+- All jobs install dependencies and Playwright browsers before running tests.
+- Artifacts and reports are uploaded for each run.
 
 ---
 
-## ⚡ Common Commands
+## 4. Project Structure
+
+```
+features/              # BDD feature files and step definitions
+src/                   # Page objects, API clients, utilities, config
+tests/                 # (Optional) Playwright .spec.ts tests
+logs/, screenshots/    # Artifacts on failure
+allure-results/, html-report/ # Test reports
+test-data/             # Sample and generated test data
+```
+
+---
+
+## 5. Running & Debugging Tests
 
 | **Purpose**                | **Command**                                      |
 |----------------------------|--------------------------------------------------|
 | Run all BDD tests          | `npm run bdd`                                     |
-| Run only @smoke tests      | `npm run bdd -- --tags "@smoke"`                 |
-| Run only @regression tests | `npm run bdd -- --tags "@regression"`            |
-| Run only @api tests        | `npm run bdd -- --tags "@api"`                   |
-| Exclude @wip tests         | `npm run bdd -- --tags "not @wip"`               |
+| Run by tag                 | `npm run bdd -- --tags "@smoke"`                 |
 | Debug mode (headed, slow)  | `DEBUG=true npm run bdd`                          |
 | Cucumber HTML report       | `npm run report:cucumber`                         |
 | Allure report              | `npx allure generate allure-results --clean -o allure-report`<br>`npx allure open allure-report` |
@@ -67,47 +99,48 @@ A **production-grade, generic AutomationFramework** for web UI, API, and databas
 
 ---
 
-## 📁 Project Structure
+## 6. Writing & Extending Tests
 
-```
-features/              # BDD feature files and step definitions
-src/                   # Source code (page objects, utils, config, etc.)
-tests/                 # (Optional) Playwright .spec.ts tests
-logs/, screenshots/    # Artifacts captured on failure
-allure-results/, html-report/ # Test reports
-```
+- **UI:** Add scenarios in `features/ui/`, implement in `features/step-definitions/ui.steps.ts`.
+- **API:** Add scenarios in `features/api/`, implement in `features/step-definitions/api.steps.ts`.
+- **DB:** Add scenarios in `features/db/`, implement in `features/step-definitions/db.steps.ts`.
+- **Add new page objects:** Place in `src/pages/`.
+- **Add new utilities:** Place in `src/utils/`.
 
 ---
 
-## 🧑‍💻 Writing BDD Scenarios
-- Write your scenarios in `.feature` files using Gherkin syntax (Given/When/Then).
-- Implement the logic for each step in `.ts` files under `features/step-definitions/`.
-- Use tags like `@smoke`, `@regression`, `@api` for filtering and analytics.
+## 7. Artifacts & Reporting
+
+- **On failure:** Screenshots in `screenshots/`, HTML in `logs/`.
+- **Allure report:** `allure-report/` (open with `npx allure open allure-report`)
+- **Cucumber HTML report:** `cucumber-report.html`
 
 ---
 
-## 🐞 Debugging & Troubleshooting
-- **Debug mode:** Run with `DEBUG=true npm run bdd` for headed browser and slow motion.
-- **Playwright Inspector:** Use Playwright’s built-in inspector for step-by-step debugging.
-- **VSCode Debugger:** Set breakpoints in step definitions and use the "Run and Debug" panel.
-- **Artifacts:** Check `logs/` and `screenshots/` for failure evidence.
+## 8. Troubleshooting
+
+- **Node version errors:** Ensure Node.js 20+ is used (see workflow and `.nvmrc` if present).
+- **Dependency errors:** Run `npm install` and `npx playwright install`.
+- **Test failures:** Check `logs/` and `screenshots/` for evidence.
+- **Debugging:** Use `DEBUG=true npm run bdd` or Playwright Inspector.
 
 ---
 
-## 🤝 Contributing & Extending
-- The framework is designed to be **generic and extensible**.
-- Add your own page objects, API clients, DB utilities, and custom step definitions as needed.
-- For more details, see the `features/` directory and step definition files.
+## 9. Security & Best Practices
+
+- **Never commit real credentials.** Use `.env` and GitHub secrets.
+- **Rotate secrets if exposed.**
+- **Review and update dependencies regularly.**
+- **Artifacts and logs may contain sensitive data—handle accordingly.**
 
 ---
 
-## 💡 Why Use This Framework?
-- **Generic:** No vendor or project lock-in. Use for any web, API, or DB automation.
-- **Readable:** Write tests in plain English using Gherkin.
-- **Powerful:** Leverage Playwright’s speed and reliability.
-- **Maintainable:** Organize tests and logic for large projects.
-- **Reporting:** Get beautiful, actionable reports with Allure and Cucumber HTML.
+## 10. Support & Contribution
+
+- **For issues:** Open a GitHub issue.
+- **To extend:** Fork, branch, and submit a pull request.
+- **For help:** See inline code comments, this run book, or ask your team.
 
 ---
 
-For any questions, see the documentation or open an issue. Happy testing!
+**For any questions, see the documentation or open an issue. Happy testing!**
