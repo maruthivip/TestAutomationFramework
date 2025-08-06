@@ -388,15 +388,6 @@ jobs:
     needs: [api-tests, e2e-tests, security-tests, accessibility-tests, performance-tests]
     if: failure() && (github.event_name == 'schedule' || github.ref == 'refs/heads/main')
     steps:
-      - name: Send Slack notification
-        uses: 8398a7/action-slack@v3
-        with:
-          status: failure
-          channel: '#qa-alerts'
-          fields: repo,message,commit,author,action,eventName,ref,workflow
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
       - name: Send email notification
         uses: dawidd6/action-send-mail@v3
         with:
