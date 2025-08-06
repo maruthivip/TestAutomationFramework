@@ -383,7 +383,11 @@ jobs:
       - name: Merge Allure results
         run: |
           mkdir -p allure-results
-          find ./artifacts -name "allure-results" -type d -exec cp -r {}/* allure-results/ \;
+          if [ -d ./artifacts ]; then
+            find ./artifacts -name "allure-results" -type d -exec cp -r {}/* allure-results/ \;
+          else
+            echo "No artifacts directory found, skipping merge."
+          fi
 
       - name: Generate Allure report
         run: npm run report:generate
