@@ -56,6 +56,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
       - name: Run ESLint
         run: npm run lint
 
@@ -351,6 +354,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
       - name: Download all test results
         uses: actions/download-artifact@v4
         with:
@@ -388,26 +394,7 @@ jobs:
     needs: [api-tests, e2e-tests, security-tests, accessibility-tests, performance-tests]
     if: failure() && (github.event_name == 'schedule' || github.ref == 'refs/heads/main')
     steps:
-      - name: Send email notification
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: 'Healthcare Test Suite Failed - ${{ github.repository }}'
-          to: ${{ secrets.QA_TEAM_EMAIL }}
-          from: 'GitHub Actions <${{ secrets.EMAIL_USERNAME }}>'
-          body: |
-            The Healthcare test suite has failed in repository ${{ github.repository }}.
-            
-            Workflow: ${{ github.workflow }}
-            Branch: ${{ github.ref }}
-            Commit: ${{ github.sha }}
-            Author: ${{ github.actor }}
-            
-            Please check the GitHub Actions logs for more details:
-            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      # Email notification step removed
 
   # Cleanup old artifacts
   cleanup:
