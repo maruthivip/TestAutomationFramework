@@ -136,7 +136,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload API test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: api-test-results-${{ matrix.environment }}
@@ -192,7 +192,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload E2E test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: e2e-test-results-${{ matrix.browser }}-${{ matrix.environment }}
@@ -236,7 +236,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload security test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: security-test-results
@@ -279,7 +279,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload accessibility test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: accessibility-test-results
@@ -323,7 +323,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload performance test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: performance-test-results
@@ -352,7 +352,7 @@ jobs:
         run: npm ci
 
       - name: Download all test results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: ./artifacts
 
@@ -366,7 +366,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Allure report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: allure-report
@@ -393,7 +393,6 @@ jobs:
         with:
           status: failure
           channel: '#qa-alerts'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
           fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
