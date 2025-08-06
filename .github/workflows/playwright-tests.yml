@@ -387,15 +387,6 @@ jobs:
           publish_dir: ./allure-report
           destination_dir: test-reports
 
-  # Notify on failure
-  notify-failure:
-    name: Notify on Failure
-    runs-on: ubuntu-latest
-    needs: [api-tests, e2e-tests, security-tests, accessibility-tests, performance-tests]
-    if: failure() && (github.event_name == 'schedule' || github.ref == 'refs/heads/main')
-    steps:
-      # Email notification step removed
-
   # Cleanup old artifacts
   cleanup:
     name: Cleanup Old Artifacts
